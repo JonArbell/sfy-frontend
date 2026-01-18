@@ -1,0 +1,144 @@
+<app-head
+  [title]="'Shortify - log in or sign up'"
+  [description]="'Log in to Shorti.fy to access your URL shortener dashboard, manage links, track analytics, and enjoy secure, custom, password-protected URLs.'"
+  [keywords]="'Shorti.fy, URL shortener, login, access account, manage links, link analytics, secure URLs, custom URLs, password protected links'"
+/>
+
+<app-authentication>
+  <form (submit)="$event.preventDefault();handleLogin()" class="w-full max-w-md bg-white shadow-lg rounded-lg p-8 space-y-4">
+    <h1 class="text-2xl font-bold text-gray-700 text-center">Log into Shortify</h1>
+
+    <div class="flex flex-col gap-1">
+      <input
+        [formField]="loginForm.username"
+        type="text"
+        placeholder="Username or phone number"
+        class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+      <div class="flex flex-col items-start justify-center">
+
+        @if(
+          loginForm.username().touched() &&
+          loginForm.username().invalid()
+        ){
+
+          @for(
+            error of loginForm.username().errors();
+            track error.kind
+          ){
+            <small class="text-red-700">
+              {{error.message}}
+            </small>
+          }
+        }
+
+      </div>
+
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <div class="relative flex items-center">
+        <input
+          [formField]="loginForm.password"
+          [type]="showPassword() ? 'text' : 'password'"
+          placeholder="Enter your password"
+          class="w-full border border-gray-300 rounded-md px-3 py-2 pr-10
+                focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+        />
+
+        @if(loginModel().password.length > 0){
+          <button
+            type="button"
+            (click)="toggleShowPassword()"
+            aria-label="Toggle password visibility"
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-800 transition"
+          >
+            @if(showPassword()) {
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7
+                            -1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            }
+
+            @else{
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13.875 18.825A10.05 10.05 0
+                            0112 19c-4.478 0-8.268-2.943-9.542-7a10.05
+                            10.05 0 012.223-3.607M6.17 6.17A10.05
+                            10.05 0 0112 5c4.478 0 8.268 2.943
+                            9.542 7a10.05 10.05 0 01-1.727
+                            3.23M3 3l18 18" />
+              </svg>
+            }
+
+          </button>
+        }
+      </div>
+
+      <div class="flex flex-col items-start justify-center">
+
+        @if(
+          loginForm.password().touched() &&
+          loginForm.password().invalid()
+        ){
+
+          @for(
+            error of loginForm.password().errors();
+            track error.kind
+          ){
+            <small class="text-red-700">
+              {{error.message}}
+            </small>
+          }
+        }
+
+      </div>
+    </div>
+
+    <div class="flex justify-center items-center">
+      <a routerLink="forgot-password" class=" text-blue-500 text-sm hover:underline">Forgot Password?</a>
+    </div>
+
+    <button type="submit" [disabled]="loginForm().invalid()" class="cursor-pointer w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition">
+      Login
+    </button>
+
+    <div class="flex items-center my-4">
+      <hr class="grow border-gray-300" />
+      <span class="mx-2 text-gray-400 text-sm">OR</span>
+      <hr class="grow border-gray-300" />
+    </div>
+
+    <button class="cursor-pointer w-full border border-gray-300 rounded-md py-2 flex items-center justify-center hover:bg-gray-100 transition">
+      <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" class="w-5 h-5 mr-2"/>
+      Login with Google
+    </button>
+
+    <p class="text-center text-gray-600 text-sm mt-4">
+      Don't have an account?
+      <a routerLink="sign-up" class="text-blue-600 hover:underline font-medium">Create Account</a>
+    </p>
+  </form>
+
+</app-authentication>

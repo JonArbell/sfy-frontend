@@ -1,0 +1,9 @@
+<div #wrapper style="display: none">
+  <qrcode
+    #qrcode
+    [qrdata]="code"
+    [width]="300"
+    [errorCorrectionLevel]="'M'"
+    [allowEmptyString]="true"
+  />
+</div>

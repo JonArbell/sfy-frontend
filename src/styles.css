@@ -1,3 +1,21 @@
-/* You can add global styles to this file, and also import other style files */
 
 @import "tailwindcss";
+@layer utilities {
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  @keyframes scaleFadeIn {
+    0% { opacity: 0; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.2s ease-out forwards;
+  }
+
+  .animate-scaleFadeIn {
+    animation: scaleFadeIn 0.25s ease-out forwards;
+  }
+}

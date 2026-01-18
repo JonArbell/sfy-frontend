@@ -1,0 +1,95 @@
+@if (pending) {
+  <app-table-list-loading />
+} @else {
+  <div class="bg-white shadow-md rounded-xl overflow-hidden border border-slate-200">
+    <div class="overflow-x-auto">
+      <table class="min-w-full table-auto divide-y divide-slate-200">
+        <thead class="bg-blue-50 border-b border-slate-200">
+          <tr>
+            @if (actionButtons.length > 0) {
+              <th
+                class="px-4 py-3 text-left text-slate-900 font-semibold text-xs md:text-sm tracking-wide uppercase"
+              >
+                Actions
+              </th>
+            }
+            @for (col of columns; track col) {
+              <th
+                class="px-4 py-3 text-left text-slate-900 font-semibold text-xs md:text-sm tracking-wide uppercase"
+              >
+                {{ formatColumn(col) }}
+              </th>
+            }
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          @for (item of items; track item.id) {
+            <tr class="hover:bg-slate-50 transition-colors duration-200 cursor-pointer">
+              @if (actionButtons.length > 0) {
+                <td class="px-4 py-2 flex gap-2">
+                  @for (button of actionButtons; track button.label) {
+                    <button
+                      (click)="handleButton(button, item)"
+                      [ngClass]="[
+                        'px-3 py-1 text-xs md:text-sm font-medium rounded-lg transition shadow-sm',
+                        button.color === 'blue' ? 'bg-blue-600 text-white hover:bg-blue-700' : '',
+                        button.color === 'red' ? 'bg-red-600 text-white hover:bg-red-700' : '',
+                        button.color === 'green'
+                          ? 'bg-green-600 text-white hover:bg-green-700'
+                          : '',
+                        !button.color ? 'bg-gray-600 text-white hover:bg-gray-700' : '',
+                      ]"
+                    >
+                      {{ button.label }}
+                    </button>
+                  }
+                </td>
+              }
+              @for (col of columns; track col) {
+                <td class="px-4 py-2 text-slate-800 text-xs md:text-sm truncate max-w-xs">
+                  <span class="block w-full" [title]="item[col]">{{
+                    formatVal(item[col], col)
+                  }}</span>
+                </td>
+              }
+            </tr>
+          }
+          @if (items.length === 0) {
+            <tr>
+              <td
+                [attr.colspan]="columns.length + (actionButtons.length > 0 ? 1 : 0)"
+                class="text-center py-6 text-gray-400 text-xs md:text-sm italic"
+              >
+                No data available
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div
+      class="flex flex-col md:flex-row justify-between items-center gap-2 p-4 border-t border-slate-200"
+    >
+      <div class="flex gap-2">
+        <button
+          [disabled]="pagination.currentPage === 1"
+          (click)="previousPage()"
+          class="px-3 py-1 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition text-xs md:text-sm shadow-sm"
+        >
+          Prev
+        </button>
+        <button
+          [disabled]="pagination.currentPage === pagination.totalPages"
+          (click)="nextPage()"
+          class="px-3 py-1 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition text-xs md:text-sm shadow-sm"
+        >
+          Next
+        </button>
+      </div>
+      <div class="text-slate-700 text-xs md:text-sm">
+        Page {{ pagination.currentPage }} of {{ pagination.totalPages }}
+      </div>
+    </div>
+  </div>
+}

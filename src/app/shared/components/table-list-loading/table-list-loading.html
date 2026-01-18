@@ -1,0 +1,13 @@
+<div class="absolute inset-0 bg-white/80 flex flex-col gap-3 p-4 animate-pulse z-10">
+  @for (i of columns; track $index) {
+    <div class="h-6 bg-blue-200 rounded w-full"></div>
+  }
+
+  @for (i of rows; track i) {
+    <div class="flex gap-2">
+      @for (j of columns; track j) {
+        <div class="h-4 bg-blue-100 rounded flex-1"></div>
+      }
+    </div>
+  }
+</div>

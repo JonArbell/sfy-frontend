@@ -1,0 +1,24 @@
+<app-head
+  [title]="'Visitors | Shorti.fy'"
+  [description]="
+    'View a list of unique visitors who accessed your shortened URLs. See visitor IP addresses, device types, and basic location details in a simple, organized table.'
+  "
+  [keywords]="
+    'Shorti.fy, visitors list, unique visitors, URL visitors, visitor table, IP address list, device type, link visitors'
+  "
+/>
+
+<app-authenticated>
+  <section class="p-4 md:p-8 bg-slate-50 min-h-screen">
+    <div class="mb-6">
+      <h2 class="text-3xl md:text-4xl font-bold text-slate-700 mb-2">Visitors</h2>
+      <p class="text-sm md:text-base text-slate-600">
+        View all visitors to your shortened URLs. Track their IP addresses, device types, possible
+        locations, and other browsing details. Gain insights at a glance and monitor traffic trends
+        with ease.
+      </p>
+    </div>
+
+    <app-list [items]="visitors()" [pagination]="pagination()" [actionButtons]="[]" />
+  </section>
+</app-authenticated>

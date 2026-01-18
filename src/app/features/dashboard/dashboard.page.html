@@ -1,0 +1,85 @@
+<app-head
+  [title]="'Dashboard | Shorti.fy'"
+  [description]="
+    'Access your Shorti.fy dashboard to view your URLs, track total visits and unique visitors, monitor top-performing links, and manage your account securely.'
+  "
+  [keywords]="
+    'Shorti.fy, URL shortener dashboard, track analytics, manage links, total visits, unique visitors, top URLs, secure links'
+  "
+/>
+
+<app-authenticated>
+  <section class="p-4 md:p-8 bg-slate-50 min-h-screen">
+    <div class="mb-6">
+      <h2 class="text-3xl md:text-4xl font-bold text-slate-700 mb-2">Dashboard Overview</h2>
+      <p class="text-sm md:text-base text-slate-600">
+        See all your URL stats at a glance. Track total URLs, visits, unique visitors, and your top
+        performing links. Visualize data with charts and manage recent shortened URLs easily.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+      <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-200">
+        <h2 class="text-sm font-medium text-slate-500">Total URLs</h2>
+        <p class="text-3xl font-bold text-slate-700 mt-1">
+          {{ summary().totalUrls }}
+        </p>
+      </div>
+
+      <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-200">
+        <h2 class="text-sm font-medium text-slate-500">Total Visits</h2>
+        <p class="text-3xl font-bold text-slate-700 mt-1">
+          {{ summary().totalVisits }}
+        </p>
+      </div>
+
+      <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-200">
+        <h2 class="text-sm font-medium text-slate-500">Total Unique Visitors</h2>
+        <p class="text-3xl font-bold text-slate-700 mt-1">
+          {{ summary().totalUniqueVisitors }}
+        </p>
+      </div>
+
+      <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-200">
+        <h2 class="text-sm font-medium text-slate-500">Most visited URL</h2>
+        <p class="text-base font-semibold truncate mt-2">
+          @if (summary().mostVisitedUrl) {
+            <span class="text-blue-600">
+              {{ `${BACKEND_BASE_URL}/${summary().mostVisitedUrl}` }}
+            </span>
+          } @else {
+            <span class="text-slate-700">No URLs yet</span>
+          }
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+      <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-200">
+        <h2 class="text-base font-semibold text-slate-700 mb-4">Top 3 Visits by URL</h2>
+        <apx-chart
+          [series]="top3VisitsByUrlSeries()"
+          [chart]="chartOptions"
+          [xaxis]="xaxisOptions()"
+        />
+      </div>
+
+      <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-200">
+        <h2 class="text-base font-semibold text-slate-700 mb-4">Visitors by Device</h2>
+
+        <apx-chart
+          [chart]="pieChartOptions"
+          [series]="totalVisitorsSeries()"
+          [labels]="totalVisitorsLabels()"
+          [responsive]="pieResponsiveOptions"
+        />
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <h2 class="text-base font-semibold text-slate-700">Top 5 Recent Urls</h2>
+
+      <app-list [items]="recentUrls()" [pending]="isRecentUrlLoading()" />
+    </div>
+  </section>
+</app-authenticated>

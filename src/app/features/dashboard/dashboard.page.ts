@@ -35,13 +35,20 @@ export class Dashboard {
     totalVisitorsByDevices: [],
   });
 
-  top3VisitsByUrlSeries = computed(() => this.chartsUrl().top3VisitsByUrl);
+  chartsUrlPending = signal(true);
+
+  test = signal<ApexAxisChartSeries>([]);
+
+  top3VisitsSeries = computed<ApexAxisChartSeries>(() => [
+    {
+      name: 'Visits',
+      data: this.chartsUrl().top3VisitsByUrl.map((v) => v.count),
+    },
+  ]);
 
   totalVisitorsSeries = computed(() => this.chartsUrl().totalVisitorsByDevices.map((t) => t.count));
 
-  totalVisitorsLabels = computed(() =>
-    this.chartsUrl().totalVisitorsByDevices.map((t) => t.device),
-  );
+  totalVisitorsLabels = computed(() => this.chartsUrl().totalVisitorsByDevices.map((t) => t.name));
 
   isRecentUrlLoading = signal(false);
 
@@ -65,9 +72,9 @@ export class Dashboard {
     height: 350,
   };
 
-  xaxisOptions = signal<ApexXAxis>({
-    categories: [],
-  });
+  top3VisitsXAxis = computed(() => ({
+    categories: this.chartsUrl().top3VisitsByUrl.map((v) => v.name),
+  }));
 
   xaxisOptionsTime = signal<ApexXAxis>({
     categories: [],
@@ -88,6 +95,7 @@ export class Dashboard {
 
     this.dashboardApi.fetchDashboardChart().subscribe({
       next: (val) => this.chartsUrl.set(val.data),
+      complete: () => this.chartsUrlPending.set(false),
     });
   }
 }

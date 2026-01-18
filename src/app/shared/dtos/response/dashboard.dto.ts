@@ -6,12 +6,12 @@ export interface UrlSummaryResponseDTO {
   mostViewerLocation: string;
 }
 
-interface TotalVisitorsByDevices {
+interface ApexAxisChartData {
   count: number;
-  device: string;
+  name: string;
 }
 
 export interface UrlChartsResponseDTO {
-  top3VisitsByUrl: ApexAxisChartSeries;
-  totalVisitorsByDevices: TotalVisitorsByDevices[];
+  top3VisitsByUrl: ApexAxisChartData[];
+  totalVisitorsByDevices: ApexAxisChartData[];
 }

@@ -57,22 +57,27 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
       <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-200">
         <h2 class="text-base font-semibold text-slate-700 mb-4">Top 3 Visits by URL</h2>
-        <apx-chart
-          [series]="top3VisitsByUrlSeries()"
-          [chart]="chartOptions"
-          [xaxis]="xaxisOptions()"
-        />
+
+        @if (!chartsUrlPending()) {
+          <apx-chart
+            [series]="top3VisitsSeries()"
+            [chart]="chartOptions"
+            [xaxis]="top3VisitsXAxis()"
+          />
+        }
       </div>
 
       <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-200">
         <h2 class="text-base font-semibold text-slate-700 mb-4">Visitors by Device</h2>
 
-        <apx-chart
-          [chart]="pieChartOptions"
-          [series]="totalVisitorsSeries()"
-          [labels]="totalVisitorsLabels()"
-          [responsive]="pieResponsiveOptions"
-        />
+        @if (!chartsUrlPending()) {
+          <apx-chart
+            [chart]="pieChartOptions"
+            [series]="totalVisitorsSeries()"
+            [labels]="totalVisitorsLabels()"
+            [responsive]="pieResponsiveOptions"
+          />
+        }
       </div>
     </div>
 

@@ -1,4 +1,10 @@
+const isProduction = true;
+
+const production = 'https://sfy-tnqq.onrender.com/api';
+
+const local = 'http://localhost/api';
+
 export const environment = {
   production: false,
-  backendBaseUrlAPI: 'http://localhost:8000/api',
+  backendBaseUrlAPI: isProduction ? production : local,
 };

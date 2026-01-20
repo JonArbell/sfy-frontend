@@ -45,7 +45,7 @@
         <p class="text-base font-semibold truncate mt-2">
           @if (summary().mostVisitedUrl) {
             <span class="text-blue-600">
-              {{ `${BACKEND_BASE_URL}/${summary().mostVisitedUrl}` }}
+              {{ `${BACKEND_BASE_URL}/urls/short/${summary().mostVisitedUrl}` }}
             </span>
           } @else {
             <span class="text-slate-700">No URLs yet</span>

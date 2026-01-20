@@ -1,29 +1,35 @@
-import { Component, computed, ElementRef, HostListener, OnInit, signal, ViewChild } from '@angular/core';
+import {
+  Component,
+  computed,
+  ElementRef,
+  HostListener,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { navs } from '../../shared/utils/sidebar-nav.util';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthStore } from '../../core/stores/auth.store';
 import { ConfirmDialogStore } from '../../core/stores/confirm-dialog.store';
 import { NgIcon } from '@ng-icons/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  standalone : true,
+  standalone: true,
   selector: 'app-authenticated',
-  imports: [
-    RouterLinkActive,
-    RouterLink,
-    NgIcon
-  ],
-  templateUrl: './authenticated.layout.html'
+  imports: [RouterLinkActive, RouterLink, NgIcon, CommonModule],
+  templateUrl: './authenticated.layout.html',
 })
-export class Authenticated implements OnInit{
-
+export class Authenticated implements OnInit {
   constructor(
-    private authStore : AuthStore,
-    private confirmDialogStore : ConfirmDialogStore
-  ){}
+    private authStore: AuthStore,
+    private confirmDialogStore: ConfirmDialogStore,
+    private router: Router,
+    private route: ActivatedRoute,
+  ) {}
 
   ngOnInit(): void {
-    if(!this.authStore.getMyAccount().id){
+    if (!this.authStore.getMyAccount().id) {
       this.authStore.loadMyAccount();
     }
   }
@@ -39,8 +45,8 @@ export class Authenticated implements OnInit{
     }
   }
 
-  toggleProfileMenu(){
-    this.profileMenuOpen.update(open => !open);
+  toggleProfileMenu() {
+    this.profileMenuOpen.update((open) => !open);
   }
 
   async confirmLogout() {
@@ -48,14 +54,15 @@ export class Authenticated implements OnInit{
       title: 'Logout',
       message: 'Are you sure you want to log out?',
       confirmText: 'Logout',
-      cancelText: 'Cancel'
+      cancelText: 'Cancel',
     });
 
-    if(!confirmed) return;
+    if (!confirmed) return;
 
     this.handleLogout();
-
   }
+
+  isActive = (url: string) => computed(() => this.router.url.startsWith(url));
 
   myAccount = computed(() => this.authStore.getMyAccount());
 
@@ -64,14 +71,12 @@ export class Authenticated implements OnInit{
   navigations = navs;
 
   toggleSidebar() {
-    this.sidebarOpen.update(open => !open);
+    this.sidebarOpen.update((open) => !open);
   }
 
-   handleLogout() {
+  handleLogout() {
     this.authStore.removeTokens();
     this.authStore.removeMyAccount();
     this.authStore.navigateToLogin();
-
   }
-
 }

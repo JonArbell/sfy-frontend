@@ -45,6 +45,7 @@ export class List implements OnChanges {
 
   private generateColumns() {
     if (this.items?.length) {
+      // just get all keys from the first item, no filtering
       this.columns = Object.keys(this.items[0]);
     } else {
       this.columns = [];

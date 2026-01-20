@@ -1,7 +1,261 @@
 <app-head
-  [title]="'Dashboard | Shorti.fy'"
-  [description]="'Access your Shorti.fy dashboard to view your URLs, track total visits and unique visitors, monitor top-performing links, and manage your account securely.'"
-  [keywords]="'Shorti.fy, URL shortener dashboard, track analytics, manage links, total visits, unique visitors, top URLs, secure links'"/>
-<app-authenticated>
+  [title]="'Profile | Shorti.fy'"
+  [description]="
+    'View and update your Shorti.fy account profile — manage your username, contact info, icon, and account details easily and securely.'
+  "
+  [keywords]="
+    'Shorti.fy, user profile, update profile, account settings, user info, secure account'
+  "
+/>
 
+<app-authenticated>
+  <section class="max-w-5xl mx-auto px-4 md:px-6 py-10">
+    <div class="mb-8 text-center md:text-left">
+      <h1 class="text-3xl md:text-4xl font-bold text-slate-700 mb-2">Profile</h1>
+      <p class="text-sm md:text-base text-slate-600">
+        View and manage your account details, update your personal information, and secure your
+        Shorti.fy profile efficiently.
+      </p>
+    </div>
+    @if (user()) {
+      <div
+        class="bg-white shadow-xl rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 mb-8"
+      >
+        <div
+          class="w-32 h-32 md:w-36 md:h-36 rounded-full overflow-hidden border-2 border-blue-600 flex items-center justify-center shrink-0 bg-slate-100"
+        >
+          @if (user().icon) {
+            <img
+              class="w-full h-full object-cover rounded-full"
+              [src]="user().icon"
+              alt="Profile icon"
+            />
+          } @else {
+            <span class="text-5xl font-bold text-slate-400">{{
+              user().username.charAt(0).toUpperCase()
+            }}</span>
+          }
+        </div>
+
+        <div class="flex-1 text-center md:text-left space-y-2">
+          <h3 class="text-3xl font-bold text-slate-700">
+            {{ user().fullName || user().username }}
+          </h3>
+          <p class="text-md text-slate-700">{{ user().email || 'No email set' }}</p>
+          <p class="text-sm text-slate-400">Member since {{ formatDate(user().createdAt) }}</p>
+        </div>
+      </div>
+
+      <div class="bg-white shadow-md rounded-2xl p-6 mb-6">
+        <div class="flex justify-between items-center mb-5">
+          <h4 class="text-xl font-semibold text-slate-700">Profile Info</h4>
+          @if (!editBasic()) {
+            <button
+              (click)="editBasic.set(true)"
+              class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            >
+              Edit
+            </button>
+          }
+        </div>
+
+        @if (!editBasic()) {
+          <div class="flex flex-col md:flex-row items-center gap-6">
+            <div class="flex-1 space-y-2">
+              <p class="text-sm text-slate-700">
+                <strong>Full Name:</strong> {{ user().fullName || 'Not set' }}
+              </p>
+              <p class="text-sm text-slate-700"><strong>Email:</strong> {{ user().email }}</p>
+            </div>
+            <div class="flex-1 flex items-center justify-center md:justify-end">
+              @if (user().icon) {
+                <img
+                  class="w-24 h-24 rounded-full object-cover border-2 border-blue-600"
+                  [src]="user().icon"
+                  alt="Profile Icon"
+                />
+              } @else {
+                <div
+                  class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 text-3xl font-bold border-2 border-blue-600"
+                >
+                  {{ user().username.charAt(0).toUpperCase() }}
+                </div>
+              }
+            </div>
+          </div>
+        } @else {
+          <form (submit)="$event.preventDefault(); updateProfile()" class="space-y-4">
+            <div class="flex flex-col gap-1">
+              <label class="text-sm text-slate-700 font-medium">Full Name</label>
+              <input
+                type="text"
+                [formField]="profileForm.fullName"
+                placeholder="Your full name"
+                class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+
+              @if (profileModelError().fullName.errors.length) {
+                <small class="m-1 text-xs text-red-700">{{
+                  profileModelError().fullName.errors[0]
+                }}</small>
+              }
+            </div>
+            <div class="flex flex-col gap-1">
+              <label class="text-sm text-slate-700 font-medium">Email</label>
+              <input
+                type="text"
+                [formField]="profileForm.email"
+                placeholder="Your email"
+                class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+
+              @if (profileModelError().email.errors.length) {
+                <small class="m-1 text-xs text-red-700">{{
+                  profileModelError().email.errors[0]
+                }}</small>
+              }
+            </div>
+            <div class="flex flex-col gap-1">
+              <label class="text-sm text-slate-700 font-medium">Profile Icon</label>
+              <input
+                type="file"
+                (change)="onIconChange($event)"
+                class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+
+              @if (profileModelError().icon.errors.length) {
+                <small class="m-1 text-xs text-red-700">{{
+                  profileModelError().icon.errors[0]
+                }}</small>
+              }
+            </div>
+            <div class="flex gap-3">
+              <button
+                type="submit"
+                class="px-5 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                (click)="editBasic.set(false)"
+                class="px-5 py-2 bg-slate-100 text-black font-medium rounded-lg hover:bg-slate-200 transition"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        }
+      </div>
+
+      <div class="bg-white shadow-md rounded-2xl p-6 mb-6">
+        <div class="flex justify-between items-center mb-5">
+          <h4 class="text-xl font-semibold text-slate-700">Security</h4>
+          @if (!editSecurity()) {
+            <button
+              (click)="editSecurity.set(true)"
+              class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            >
+              Edit
+            </button>
+          }
+        </div>
+
+        @if (!editSecurity()) {
+          <div class="space-y-2">
+            <p class="text-sm text-slate-700"><strong>Username:</strong> {{ user().username }}</p>
+            <p class="text-sm text-slate-700">••••••••••••••</p>
+          </div>
+        } @else {
+          <form (submit)="$event.preventDefault(); updateSecurity()" class="space-y-4">
+            <div class="flex flex-col gap-1">
+              <label class="text-sm text-slate-700 font-medium">Username</label>
+              <input
+                type="text"
+                [formField]="profileForm.username"
+                placeholder="New username"
+                class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+
+              @if (profileModelError().username.errors.length) {
+                <small class="m-2 text-xs text-red-700">{{
+                  profileModelError().username.errors[0]
+                }}</small>
+              }
+            </div>
+            <div class="flex flex-col gap-1">
+              <label class="text-sm text-slate-700 font-medium">Old Password</label>
+              <input
+                type="password"
+                [formField]="profileForm.oldPassword"
+                placeholder="Old password"
+                class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+
+              @if (profileModelError().oldPassword.errors.length) {
+                <small class="m-1 text-xs text-red-700">{{
+                  profileModelError().oldPassword.errors[0]
+                }}</small>
+              }
+            </div>
+            <div class="flex flex-col gap-1">
+              <label class="text-sm text-slate-700 font-medium">Password</label>
+              <input
+                type="password"
+                [formField]="profileForm.password"
+                placeholder="New password"
+                class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+
+              @if (profileModelError().password.errors.length) {
+                <small class="m-1 text-xs text-red-700">{{
+                  profileModelError().password.errors[0]
+                }}</small>
+              }
+            </div>
+            <div class="flex flex-col gap-1">
+              <label class="text-sm text-slate-700 font-medium">Confirm Password</label>
+              <input
+                type="password"
+                [formField]="profileForm.confirmPassword"
+                placeholder="Confirm password"
+                class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+
+              @if (profileModelError().confirmPassword.errors.length) {
+                <small class="m-1 text-xs text-red-700">{{
+                  profileModelError().confirmPassword.errors[0]
+                }}</small>
+              }
+            </div>
+            <div class="flex gap-3">
+              <button
+                type="submit"
+                class="px-5 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                (click)="editSecurity.set(false)"
+                class="px-5 py-2 bg-slate-100 text-black font-medium rounded-lg hover:bg-slate-200 transition"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        }
+      </div>
+
+      @if (successMessage()) {
+        <p class="text-sm text-green-600 mt-4 text-center">{{ successMessage() }}</p>
+      }
+
+      @if (errorMessage()) {
+        <p class="text-sm text-red-600 mt-4 text-center">{{ errorMessage() }}</p>
+      }
+    } @else {
+      <p class="text-sm text-slate-700 text-center py-6">Loading profile...</p>
+    }
+  </section>
 </app-authenticated>

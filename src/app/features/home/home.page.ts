@@ -10,102 +10,89 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { environment } from '../../../environments/environment.development';
 
 interface UrlFormErrors {
-  url : string[];
+  url: string[];
   expirationDate: string[];
   password: string[];
 }
 
 @Component({
   selector: 'app-home',
-  imports: [FormField,Head, Authenticated],
-  templateUrl: './home.page.html'
+  imports: [FormField, Head, Authenticated],
+  templateUrl: './home.page.html',
 })
 export class Home {
-
   constructor(
-    private urlApi : UrlApi,
-    private clipboard: Clipboard
-  ){}
+    private urlApi: UrlApi,
+    private clipboard: Clipboard,
+  ) {}
 
   formModel = signal({
     url: '',
     expirationDate: '',
-    password: ''
+    password: '',
   });
 
   shortUrl = signal('');
 
   form = form(this.formModel, (schema) => {
-
-    required(schema.url,
-      {message : 'URL is required.'}
-    );
+    required(schema.url, { message: 'URL is required.' });
 
     validate(schema.url, ({ value }) => {
       if (!value().startsWith('https://') && !value().startsWith('http://')) {
         return {
           kind: 'urlProtocol',
-          message: 'URL must start with http:// or https://'
-        }
+          message: 'URL must start with http:// or https://',
+        };
       }
       return null;
     });
 
-    minLength(schema.password,
-      5,
-      {message : 'Password must at least 5 characters.'}
-    );
+    minLength(schema.password, 5, { message: 'Password must at least 5 characters.' });
 
-    pattern(
-      schema.password,
-      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]+$/,
-      { message: 'Password must include letters and numbers.' }
-    );
-
+    pattern(schema.password, /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]+$/, {
+      message: 'Password must include letters and numbers.',
+    });
   });
 
   formErrors = signal<UrlFormErrors>({
-    expirationDate : [],
-    password : [],
-    url : []
+    expirationDate: [],
+    password: [],
+    url: [],
   });
 
   showAdvanced = signal(false);
 
-  resetForm(){
+  resetForm() {
     this.formModel.set({
       url: '',
       expirationDate: '',
-      password: ''
+      password: '',
     });
+    this.form().reset();
   }
 
-  shortenUrl(){
-
-    const validatedForm : UrlShortenRequestDTO = {
-      url : this.formModel().url
-    }
+  shortenUrl() {
+    const validatedForm: UrlShortenRequestDTO = {
+      url: this.formModel().url,
+    };
 
     this.shortUrl.set('');
 
-    if(this.formModel().expirationDate !== '')
+    if (this.formModel().expirationDate !== '')
       validatedForm.expirationDate = this.formModel().expirationDate;
 
-    if(this.formModel().password !== '')
-      validatedForm.password = this.formModel().password;
+    if (this.formModel().password !== '') validatedForm.password = this.formModel().password;
 
-    this.urlApi.shortenUrl(validatedForm)
-    .subscribe({
-      next : val => {
+    this.urlApi.shortenUrl(validatedForm).subscribe({
+      next: (val) => {
         this.shortUrl.set(val.data.short);
 
         this.resetForm();
       },
-      error : (err : HttpErrorResponse) => {
-        this.formErrors.set(err.error?.errors)
-      }
+      error: (err: HttpErrorResponse) => {
+        this.formErrors.set(err.error?.errors);
+      },
     });
-
   }
 
   copyShortUrl() {
@@ -114,5 +101,4 @@ export class Home {
       toast.success('Short URL copied to clipboard!');
     }
   }
-
 }

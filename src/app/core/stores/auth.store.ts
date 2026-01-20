@@ -1,31 +1,31 @@
-import { computed, Injectable,signal } from "@angular/core";
-import { CookieService } from "ngx-cookie-service";
-import { MyAccount } from "../../shared/types/my-account.type";
-import { Router } from "@angular/router";
-import { MyAccount as MyAccountDataAccess } from "../data-access/my-account/my-account.api";
-import { toast } from "ngx-sonner";
-import { HttpErrorResponse } from "@angular/common/http";
+import { computed, Injectable, signal } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
+import { MyAccountResponseDTO } from '../../shared/types/my-account.type';
+import { Router } from '@angular/router';
+import { MyAccount as MyAccountDataAccess } from '../data-access/my-account/my-account.api';
+import { toast } from 'ngx-sonner';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
-
   private token = signal<string | null>(null);
 
   private refreshToken = signal<string | null>(null);
 
-  private myAccount = signal<MyAccount>({
-    id : '',
-    username : '',
-    fullName : '',
-    email : null,
-    icon : null,
-    updatedAt : null
+  private myAccount = signal<MyAccountResponseDTO>({
+    id: '',
+    username: '',
+    fullName: '',
+    email: null,
+    icon: null,
+    createdAt: null,
+    updatedAt: null,
   });
 
   constructor(
     private cookieService: CookieService,
-    private router : Router,
-    private myAccountDataAccess : MyAccountDataAccess
+    private router: Router,
+    private myAccountDataAccess: MyAccountDataAccess,
   ) {
     this.token.set(cookieService.get('token'));
     this.refreshToken.set(cookieService.get('refreshToken'));
@@ -41,22 +41,19 @@ export class AuthStore {
     } else {
       this.refreshToken.set(token);
     }
-
   }
 
-  setMyAccount(myAccount : any){
+  setMyAccount(myAccount: any) {
     this.myAccount.set(myAccount);
   }
 
-  getToken(tokenType : 'token' | 'refreshToken') : string | null {
-
-    if(tokenType === 'token')
-      return this.token();
+  getToken(tokenType: 'token' | 'refreshToken'): string | null {
+    if (tokenType === 'token') return this.token();
 
     return this.refreshToken();
   }
 
-  getMyAccount() : MyAccount {
+  getMyAccount(): MyAccountResponseDTO {
     return this.myAccount();
   }
 
@@ -67,27 +64,26 @@ export class AuthStore {
     this.refreshToken.set(null);
   }
 
-  removeMyAccount(){
+  removeMyAccount() {
     this.myAccount.set({
-      id : '',
-      username : '',
-      fullName : '',
-      email : null,
-      icon : null,
-      updatedAt : null
+      id: '',
+      username: '',
+      fullName: '',
+      email: null,
+      icon: null,
+      createdAt: null,
+      updatedAt: null,
     });
   }
 
-  navigateToLogin(){
+  navigateToLogin() {
     this.router.navigate(['/']);
   }
 
-  loadMyAccount(){
-    this.myAccountDataAccess.fetchMyAccount()
-    .subscribe({
-      next : val => this.setMyAccount(val.data),
-      error : (err : HttpErrorResponse) => toast.error(err.message)
+  loadMyAccount() {
+    this.myAccountDataAccess.fetchMyAccount().subscribe({
+      next: (val) => this.setMyAccount(val.data),
+      error: (err: HttpErrorResponse) => toast.error(err.message),
     });
   }
-
 }

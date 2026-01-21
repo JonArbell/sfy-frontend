@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { MyAccount as MyAccountDataAccess } from '../data-access/my-account/my-account.api';
 import { toast } from 'ngx-sonner';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AuthProvider } from '../../shared/types/auth-provider.enum';
 
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
@@ -18,6 +19,7 @@ export class AuthStore {
     fullName: '',
     email: null,
     icon: null,
+    provider: AuthProvider.LOCAL,
     createdAt: null,
     updatedAt: null,
   });
@@ -34,7 +36,11 @@ export class AuthStore {
   authenticated = computed(() => !!this.token() || !!this.refreshToken());
 
   setToken(token: string, tokenType: 'token' | 'refreshToken') {
-    this.cookieService.set(tokenType, token);
+    this.cookieService.set(tokenType, token, {
+      path: '/',
+      sameSite: 'None',
+      secure: false,
+    });
 
     if (tokenType === 'token') {
       this.token.set(token);
@@ -43,8 +49,10 @@ export class AuthStore {
     }
   }
 
-  setMyAccount(myAccount: any) {
+  setMyAccount(myAccount: MyAccountResponseDTO) {
     this.myAccount.set(myAccount);
+
+    console.log(this.getMyAccount());
   }
 
   getToken(tokenType: 'token' | 'refreshToken'): string | null {
@@ -71,6 +79,7 @@ export class AuthStore {
       fullName: '',
       email: null,
       icon: null,
+      provider: AuthProvider.LOCAL,
       createdAt: null,
       updatedAt: null,
     });

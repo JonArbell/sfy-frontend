@@ -148,104 +148,106 @@
         }
       </div>
 
-      <div class="bg-white shadow-md rounded-2xl p-6 mb-6">
-        <div class="flex justify-between items-center mb-5">
-          <h4 class="text-xl font-semibold text-slate-700">Security</h4>
+      @if (user().provider === 'LOCAL') {
+        <div class="bg-white shadow-md rounded-2xl p-6 mb-6">
+          <div class="flex justify-between items-center mb-5">
+            <h4 class="text-xl font-semibold text-slate-700">Security</h4>
+            @if (!editSecurity()) {
+              <button
+                (click)="editSecurity.set(true)"
+                class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              >
+                Edit
+              </button>
+            }
+          </div>
+
           @if (!editSecurity()) {
-            <button
-              (click)="editSecurity.set(true)"
-              class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-            >
-              Edit
-            </button>
+            <div class="space-y-2">
+              <p class="text-sm text-slate-700"><strong>Username:</strong> {{ user().username }}</p>
+              <p class="text-sm text-slate-700">••••••••••••••</p>
+            </div>
+          } @else {
+            <form (submit)="$event.preventDefault(); updateSecurity()" class="space-y-4">
+              <div class="flex flex-col gap-1">
+                <label class="text-sm text-slate-700 font-medium">Username</label>
+                <input
+                  type="text"
+                  [formField]="profileForm.username"
+                  placeholder="New username"
+                  class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+
+                @if (profileModelError().username.errors.length) {
+                  <small class="m-2 text-xs text-red-700">{{
+                    profileModelError().username.errors[0]
+                  }}</small>
+                }
+              </div>
+              <div class="flex flex-col gap-1">
+                <label class="text-sm text-slate-700 font-medium">Old Password</label>
+                <input
+                  type="password"
+                  [formField]="profileForm.oldPassword"
+                  placeholder="Old password"
+                  class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+
+                @if (profileModelError().oldPassword.errors.length) {
+                  <small class="m-1 text-xs text-red-700">{{
+                    profileModelError().oldPassword.errors[0]
+                  }}</small>
+                }
+              </div>
+              <div class="flex flex-col gap-1">
+                <label class="text-sm text-slate-700 font-medium">Password</label>
+                <input
+                  type="password"
+                  [formField]="profileForm.password"
+                  placeholder="New password"
+                  class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+
+                @if (profileModelError().password.errors.length) {
+                  <small class="m-1 text-xs text-red-700">{{
+                    profileModelError().password.errors[0]
+                  }}</small>
+                }
+              </div>
+              <div class="flex flex-col gap-1">
+                <label class="text-sm text-slate-700 font-medium">Confirm Password</label>
+                <input
+                  type="password"
+                  [formField]="profileForm.confirmPassword"
+                  placeholder="Confirm password"
+                  class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+
+                @if (profileModelError().confirmPassword.errors.length) {
+                  <small class="m-1 text-xs text-red-700">{{
+                    profileModelError().confirmPassword.errors[0]
+                  }}</small>
+                }
+              </div>
+              <div class="flex gap-3">
+                <button
+                  type="submit"
+                  class="px-5 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  (click)="editSecurity.set(false)"
+                  class="px-5 py-2 bg-slate-100 text-black font-medium rounded-lg hover:bg-slate-200 transition"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
           }
         </div>
-
-        @if (!editSecurity()) {
-          <div class="space-y-2">
-            <p class="text-sm text-slate-700"><strong>Username:</strong> {{ user().username }}</p>
-            <p class="text-sm text-slate-700">••••••••••••••</p>
-          </div>
-        } @else {
-          <form (submit)="$event.preventDefault(); updateSecurity()" class="space-y-4">
-            <div class="flex flex-col gap-1">
-              <label class="text-sm text-slate-700 font-medium">Username</label>
-              <input
-                type="text"
-                [formField]="profileForm.username"
-                placeholder="New username"
-                class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-
-              @if (profileModelError().username.errors.length) {
-                <small class="m-2 text-xs text-red-700">{{
-                  profileModelError().username.errors[0]
-                }}</small>
-              }
-            </div>
-            <div class="flex flex-col gap-1">
-              <label class="text-sm text-slate-700 font-medium">Old Password</label>
-              <input
-                type="password"
-                [formField]="profileForm.oldPassword"
-                placeholder="Old password"
-                class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-
-              @if (profileModelError().oldPassword.errors.length) {
-                <small class="m-1 text-xs text-red-700">{{
-                  profileModelError().oldPassword.errors[0]
-                }}</small>
-              }
-            </div>
-            <div class="flex flex-col gap-1">
-              <label class="text-sm text-slate-700 font-medium">Password</label>
-              <input
-                type="password"
-                [formField]="profileForm.password"
-                placeholder="New password"
-                class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-
-              @if (profileModelError().password.errors.length) {
-                <small class="m-1 text-xs text-red-700">{{
-                  profileModelError().password.errors[0]
-                }}</small>
-              }
-            </div>
-            <div class="flex flex-col gap-1">
-              <label class="text-sm text-slate-700 font-medium">Confirm Password</label>
-              <input
-                type="password"
-                [formField]="profileForm.confirmPassword"
-                placeholder="Confirm password"
-                class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-
-              @if (profileModelError().confirmPassword.errors.length) {
-                <small class="m-1 text-xs text-red-700">{{
-                  profileModelError().confirmPassword.errors[0]
-                }}</small>
-              }
-            </div>
-            <div class="flex gap-3">
-              <button
-                type="submit"
-                class="px-5 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
-              >
-                Save
-              </button>
-              <button
-                type="button"
-                (click)="editSecurity.set(false)"
-                class="px-5 py-2 bg-slate-100 text-black font-medium rounded-lg hover:bg-slate-200 transition"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        }
-      </div>
+      }
 
       @if (successMessage()) {
         <p class="text-sm text-green-600 mt-4 text-center">{{ successMessage() }}</p>

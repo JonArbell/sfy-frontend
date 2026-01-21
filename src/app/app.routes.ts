@@ -7,6 +7,8 @@ import { Profile } from './features/profile/profile.page';
 import { canActivateGuard } from './core/middlewares/guards/can-activate-guard';
 import { Index } from './features/index/index.page';
 import { Visitors } from './features/visitors/visitors.page';
+import { AuthCallback } from './features/auth/auth-callback/auth-callback.page';
+import { authCallbackGuardGuard } from './core/middlewares/guards/auth-callback-guard-guard';
 
 export const routes: Routes = [
   {
@@ -43,6 +45,12 @@ export const routes: Routes = [
     path: 'sign-up',
     component: Signup,
     canActivate: [canActivateGuard],
+    data: { guestOnly: true },
+  },
+  {
+    path: 'auth/callback',
+    component: AuthCallback,
+    canActivate: [authCallbackGuardGuard],
     data: { guestOnly: true },
   },
   {

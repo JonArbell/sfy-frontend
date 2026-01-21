@@ -4,7 +4,7 @@ import { Authentication } from '../../../layout/authentication/authentication.la
 import { Head } from '../../../shared/components/head/head';
 import { AuthenticationApi } from '../../../core/data-access/authentication/authentication.api';
 import { toast } from 'ngx-sonner';
-import { form, FormField, maxLength, minLength, pattern, required } from '@angular/forms/signals';
+import { form, FormField, minLength, pattern, required } from '@angular/forms/signals';
 import { AuthStore } from '../../../core/stores/auth.store';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -28,6 +28,10 @@ export class Login {
 
   toggleShowPassword() {
     this.showPassword.set(!this.showPassword());
+  }
+
+  googleLogin() {
+    window.location.href = this.authApi.googleAuth();
   }
 
   loginForm = form(this.loginModel, (schema) => {

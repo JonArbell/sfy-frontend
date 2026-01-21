@@ -8,7 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { navs } from '../../shared/utils/sidebar-nav.util';
-import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthStore } from '../../core/stores/auth.store';
 import { ConfirmDialogStore } from '../../core/stores/confirm-dialog.store';
 import { NgIcon } from '@ng-icons/core';
@@ -25,7 +25,6 @@ export class Authenticated implements OnInit {
     private authStore: AuthStore,
     private confirmDialogStore: ConfirmDialogStore,
     private router: Router,
-    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {

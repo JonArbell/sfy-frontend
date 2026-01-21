@@ -22,7 +22,7 @@ export class MyAccount {
     );
   }
 
-  updateProfile(profile: UserProfileRequestDTO) {
+  updateProfile(profile: FormData) {
     return this.httpClient.put<GenericResponseDTO<MyAccountResponseDTO>>('/me/profile', profile);
   }
 }

@@ -101,31 +101,28 @@ export class Profile {
     });
   }
 
-  updateProfile() {
-    const form: UserProfileRequestDTO = {
-      email: this.profileModel().email,
-      icon: this.profileModel().icon,
-      fullName: this.profileModel().fullName,
-    };
+  private _selectedIconFile?: File;
 
-    this.myAccountApi.updateProfile(form).subscribe({
+  updateProfile() {
+    const formData = new FormData();
+
+    formData.append('email', this.profileModel().email);
+    formData.append('fullName', this.profileModel().fullName);
+
+    if (this._selectedIconFile) {
+      formData.append('icon', this._selectedIconFile);
+    }
+
+    this.myAccountApi.updateProfile(formData).subscribe({
       next: (val) => {
         toast.success('Profile info updated successfully.');
-        this.editSecurity.set(false);
+        this.editBasic.set(false);
 
-        this.profileModelError.update((current) => ({
-          ...current,
-          username: { errors: [] },
-          fullName: { errors: [] },
-          email: { errors: [] },
-          icon: { errors: [] },
-          oldPassword: { errors: [] },
-          password: { errors: [] },
-          confirmPassword: { errors: [] },
-        }));
+        this.authStore.setMyAccount(val.data);
+        this._selectedIconFile = undefined;
       },
       error: (err) => {
-        const properties = err.error.errors.properties;
+        const properties = err.error?.errors?.properties;
 
         if (properties) {
           this.profileModelError.update((current) => ({
@@ -133,21 +130,44 @@ export class Profile {
             fullName: properties.fullName ?? current.fullName,
             email: properties.email ?? current.email,
             icon: properties.icon ?? current.icon,
-            oldPassword: properties.oldPassword ?? current.oldPassword,
-            password: properties.password ?? current.password,
-            confirmPassword: properties.confirmPassword ?? current.confirmPassword,
+            oldPassword: current.oldPassword,
+            password: current.password,
+            confirmPassword: current.confirmPassword,
           }));
         }
 
-        const message =
-          err?.error?.message || 'Failed to update security settings. Please try again.';
-        toast.error(message);
+        toast.error(err?.error?.message || 'Failed to update profile. Please try again.');
       },
     });
   }
 
   onIconChange(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select a valid image file.');
+      return;
+    }
+
+    // Optional: size limit (e.g. 2MB)
+    const MAX_SIZE = 2 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+      toast.error('Image must be less than 2MB.');
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(file);
+
+    this.profileModel.update((model) => ({
+      ...model,
+      icon: previewUrl,
+    }));
+
+    this._selectedIconFile = file;
   }
 
   updateSecurity(): void {

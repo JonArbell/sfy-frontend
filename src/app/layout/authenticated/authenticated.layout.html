@@ -99,7 +99,13 @@
           (click)="toggleProfileMenu()"
           class="flex items-center gap-2 px-2 py-1 rounded-full transition focus:outline-none"
         >
-          <img [src]="myAccount().icon" class="w-9 h-9 rounded-full ring-2 ring-blue-200 shadow" />
+          @if (myAccount().icon) {
+            <img
+              [src]="myAccount().icon"
+              class="w-9 h-9 rounded-full ring-2 ring-blue-200 shadow"
+            />
+          }
+
           <svg class="w-4 h-4 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"

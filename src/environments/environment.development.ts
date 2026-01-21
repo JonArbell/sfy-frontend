@@ -1,4 +1,4 @@
-const isProduction = false;
+const isProduction = true;
 
 const production = 'https://sfy-tnqq.onrender.com/api';
 

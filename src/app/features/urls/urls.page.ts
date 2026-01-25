@@ -112,8 +112,7 @@ export class Urls {
 
   generateQR(url: UrlResponseDTO) {
     this.urlApi.fetchUrlById(url.id).subscribe({
-      next: (val) =>
-        this.qrCode.set(`${environment.backendBaseUrlAPI}/urls/short/${val.data.short}`),
+      next: (val) => this.qrCode.set(`${environment.backendBaseUrlAPI}/${val.data.short}`),
     });
   }
 

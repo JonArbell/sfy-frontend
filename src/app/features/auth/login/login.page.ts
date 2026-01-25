@@ -20,8 +20,8 @@ interface LoginForm {
 })
 export class Login {
   loginModel = signal<LoginForm>({
-    username: 'jon_dev',
-    password: 'Arbellpogi23@',
+    username: '',
+    password: '',
   });
 
   showPassword = signal(false);

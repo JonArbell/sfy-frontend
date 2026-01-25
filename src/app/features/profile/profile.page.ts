@@ -7,7 +7,6 @@ import { MyAccount } from '../../core/data-access/my-account/my-account.api';
 import { formatToReadableDate } from '../../shared/utils/format-date.util';
 import { UpdateUserCredentialsRequestDTO } from '../../shared/dtos/request/user-credential-request.dto';
 import { toast } from 'ngx-sonner';
-import { UserProfileRequestDTO } from '../../shared/dtos/request/user-profile-request.dto';
 
 interface MyAccountForm {
   username: string;

@@ -134,7 +134,7 @@ export class Urls {
 
   copyShortUrl() {
     if (this.shortUrl()) {
-      this.clipBoard.copy(`${environment.backendBaseUrlAPI}/urls/short/${this.shortUrl()}`);
+      this.clipBoard.copy(`${environment.backendBaseUrlAPI}/${this.shortUrl()}`);
       toast.success('Short URL copied to clipboard!');
     }
   }

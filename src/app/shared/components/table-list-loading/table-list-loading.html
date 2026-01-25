@@ -1,13 +1,37 @@
-<div class="absolute inset-0 bg-white/80 flex flex-col gap-3 p-4 animate-pulse z-10">
-  @for (i of columns; track $index) {
-    <div class="h-6 bg-blue-200 rounded w-full"></div>
-  }
+<table class="min-w-full table-auto border-collapse">
+  <thead class="bg-blue-50 border-b border-slate-200">
+    <tr>
+      <th class="px-4 py-3">
+        <div class="skeleton h-4 w-16"></div>
+      </th>
+      <th class="px-4 py-3">
+        <div class="skeleton h-4 w-24"></div>
+      </th>
+      <th class="px-4 py-3">
+        <div class="skeleton h-4 w-24"></div>
+      </th>
+      <th class="px-4 py-3">
+        <div class="skeleton h-4 w-24"></div>
+      </th>
+    </tr>
+  </thead>
 
-  @for (i of rows; track i) {
-    <div class="flex gap-2">
-      @for (j of columns; track j) {
-        <div class="h-4 bg-blue-100 rounded flex-1"></div>
-      }
-    </div>
-  }
-</div>
+  <tbody>
+    @for (i of [1, 2, 3, 4, 5]; track i) {
+      <tr class="border-b border-slate-100">
+        <td class="px-4 py-2">
+          <div class="skeleton h-4 w-20"></div>
+        </td>
+        <td class="px-4 py-2">
+          <div class="skeleton h-4 w-full"></div>
+        </td>
+        <td class="px-4 py-2">
+          <div class="skeleton h-4 w-full"></div>
+        </td>
+        <td class="px-4 py-2">
+          <div class="skeleton h-4 w-32"></div>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

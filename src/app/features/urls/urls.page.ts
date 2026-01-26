@@ -147,6 +147,16 @@ export class Urls {
 
   async prepareUpdate(url: UrlResponseDTO) {
     this.updating.set(true);
+    this.formModel.update((current) => ({
+      ...current,
+      id: url.id,
+      active: url.active,
+      expirationDate: url.expirationDate ? url.expirationDate.toDateString() : '',
+      original: url.original,
+      short: url.short,
+      totalVisit: url.totalVisit,
+      totalVisitor: url.totalVisitor,
+    }));
   }
 
   async confirmDelete(url: UrlResponseDTO) {

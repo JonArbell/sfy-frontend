@@ -70,8 +70,6 @@ export class Urls {
 
   updating = signal(false);
 
-  shortUrl = signal('');
-
   qrCode = signal('');
 
   isFetchingUrls = signal(false);
@@ -105,6 +103,7 @@ export class Urls {
   }
 
   actionButtons: ActionButton[] = [
+    { label: 'Copy', color: 'gray', action: (item) => this.copyShortUrl(item) },
     { label: 'Generate QR', color: 'green', action: (item) => this.generateQR(item) },
     { label: 'Update', color: 'blue', action: (item) => this.prepareUpdate(item) },
     { label: 'Delete', color: 'red', action: (item) => this.confirmDelete(item) },
@@ -131,11 +130,9 @@ export class Urls {
 
   showAdvanced = signal(false);
 
-  copyShortUrl() {
-    if (this.shortUrl()) {
-      this.clipBoard.copy(`${environment.backendBaseUrlAPI}/${this.shortUrl()}`);
-      toast.success('Short URL copied to clipboard!');
-    }
+  copyShortUrl(url: UrlResponseDTO) {
+    this.clipBoard.copy(`${environment.backendBaseUrlAPI}/${url.short}`);
+    toast.success('Short URL copied to clipboard!');
   }
 
   deleteUrl(id: string) {

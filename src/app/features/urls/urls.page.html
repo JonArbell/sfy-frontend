@@ -17,21 +17,6 @@
         Update a shorten URL
       </h2>
 
-      @if (shortUrl()) {
-        <div
-          class="mb-5 p-4 border border-blue-300 rounded-lg bg-blue-50 flex justify-between items-center"
-        >
-          <span class="text-blue-700 font-medium wrap-break-word">{{ shortUrl() }}</span>
-          <button
-            type="button"
-            (click)="copyShortUrl()"
-            class="ml-4 px-3 py-1 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 transition"
-          >
-            Copy
-          </button>
-        </div>
-      }
-
       <form (submit)="$event.preventDefault(); updateUrl()" class="flex flex-col gap-5">
         <div class="flex flex-col gap-1">
           <div class="relative">

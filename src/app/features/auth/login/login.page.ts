@@ -49,8 +49,8 @@ export class Login {
 
     required(schema.password, { message: 'Password is required.' });
 
-    pattern(schema.password, /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]+$/, {
-      message: 'Password must include letters and numbers.',
+    pattern(schema.password, /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,32}$/, {
+      message: 'Invalid password format.',
     });
   });
 

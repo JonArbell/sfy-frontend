@@ -131,7 +131,7 @@ export class Urls {
   showAdvanced = signal(false);
 
   copyShortUrl(url: UrlResponseDTO) {
-    this.clipBoard.copy(`${environment.backendBaseUrlAPI}/${url.short}`);
+    this.clipBoard.copy(`${environment.backendBaseUrlCopy}/${url.short}`);
     toast.success('Short URL copied to clipboard!');
   }
 

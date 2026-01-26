@@ -103,7 +103,7 @@ export class Urls {
   }
 
   actionButtons: ActionButton[] = [
-    { label: 'Copy', color: 'gray', action: (item) => this.copyShortUrl(item) },
+    { label: 'Copy', action: (item) => this.copyShortUrl(item) },
     { label: 'Generate QR', color: 'green', action: (item) => this.generateQR(item) },
     { label: 'Update', color: 'blue', action: (item) => this.prepareUpdate(item) },
     { label: 'Delete', color: 'red', action: (item) => this.confirmDelete(item) },

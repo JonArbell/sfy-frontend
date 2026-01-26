@@ -128,7 +128,11 @@ export class Urls {
     if (this.formModel().password !== '') validatedForm.password = this.formModel().password;
 
     this.urlApi.updateUrlById(id, validatedForm).subscribe({
-      next: (val) => toast.success(val?.message),
+      next: (val) => {
+        this.updating.set(false);
+        this.resetForm();
+        toast.success(val?.message);
+      },
       error: (err) => toast.error(err.error?.message),
     });
   }
@@ -138,6 +142,17 @@ export class Urls {
   copyShortUrl(url: UrlResponseDTO) {
     this.clipBoard.copy(`${environment.backendBaseUrlCopy}/${url.short}`);
     toast.success('Short URL copied to clipboard!');
+  }
+
+  resetForm() {
+    this.formModel.set({
+      id: '',
+      original: '',
+      short: '',
+      active: false,
+      expirationDate: '',
+      password: '',
+    });
   }
 
   deleteUrl(id: string) {

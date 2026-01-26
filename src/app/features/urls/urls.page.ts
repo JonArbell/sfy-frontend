@@ -125,7 +125,10 @@ export class Urls {
       password: form.password,
     };
 
-    this.urlApi.updateUrlById(id, requestForm);
+    this.urlApi.updateUrlById(id, requestForm).subscribe({
+      next: (val) => toast.success(val?.message),
+      error: (err) => toast.error(err.error?.message),
+    });
   }
 
   showAdvanced = signal(false);

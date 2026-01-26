@@ -118,14 +118,16 @@ export class Urls {
   updateUrl() {
     const { id, ...form } = this.formModel();
 
-    const requestForm: UrlShortenRequestDTO = {
+    const validatedForm: UrlShortenRequestDTO = {
       url: form.original,
-      active: form.active,
-      expirationDate: form.expirationDate,
-      password: form.password,
     };
 
-    this.urlApi.updateUrlById(id, requestForm).subscribe({
+    if (this.formModel().expirationDate !== '')
+      validatedForm.expirationDate = this.formModel().expirationDate;
+
+    if (this.formModel().password !== '') validatedForm.password = this.formModel().password;
+
+    this.urlApi.updateUrlById(id, validatedForm).subscribe({
       next: (val) => toast.success(val?.message),
       error: (err) => toast.error(err.error?.message),
     });

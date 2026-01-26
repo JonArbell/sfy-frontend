@@ -53,8 +53,6 @@ export class Login {
     password: [],
   });
 
-  passwordLength = computed(() => this.loginForm.password().value.length);
-
   constructor(
     private authApi: AuthenticationApi,
     private authStore: AuthStore,
@@ -74,11 +72,19 @@ export class Login {
         this.router.navigate(['']);
       },
       error: (e: HttpErrorResponse) => {
+        const properties = e.error?.errors?.properties;
+
         if (e.status === 0) {
           toast.error('Cannot connect to server. Please try again later.');
-        } else {
-          toast.error(e.error?.message);
+          return;
+        } else if (properties) {
+          this.formErrors.update((current) => ({
+            username: properties.username ?? current.username,
+            password: current.password,
+          }));
         }
+
+        toast.error(e?.error?.message || 'Failed to login. Please try again.');
       },
     });
   }

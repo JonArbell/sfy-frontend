@@ -37,6 +37,14 @@ export class Signup {
     username: '',
   });
 
+  formErrors = signal({
+    fullName: [],
+    username: [],
+    password: [],
+    confirmPassword: [],
+    email: [],
+  });
+
   registerForm = form(this.registerModel, (schemaPath) => {
     required(schemaPath.username, { message: 'Username is required' });
     minLength(schemaPath.username, 4, { message: 'Min 4 characters' });
@@ -53,7 +61,6 @@ export class Signup {
       message: 'Password must contain uppercase, lowercase, number, special char',
     });
 
-    // Confirm password match validation
     applyWhen(
       schemaPath.confirmPassword,
       ({ valueOf }) => valueOf(schemaPath.password) !== valueOf(schemaPath.confirmPassword),
@@ -69,7 +76,22 @@ export class Signup {
         toast.success('Successfully created an account!');
       },
       error: (err) => {
-        toast.error(err.error.message);
+        const properties = err.error?.errors?.properties;
+
+        if (err.status === 0) {
+          toast.error('Cannot connect to server. Please try again later.');
+          return;
+        } else if (properties) {
+          this.formErrors.update((current) => ({
+            username: properties.username ?? current.username,
+            fullName: properties.fullName ?? current.fullName,
+            email: properties.email ?? current.email,
+            password: current.password,
+            confirmPassword: current.confirmPassword,
+          }));
+        }
+
+        toast.error(err?.error?.message || 'Failed to register. Please try again.');
       },
     });
   }

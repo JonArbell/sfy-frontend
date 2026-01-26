@@ -154,7 +154,7 @@ export class Urls {
       ...current,
       id: url.id,
       active: url.active,
-      expirationDate: url.expirationDate ? url.expirationDate.toDateString() : '',
+      expirationDate: url.expirationDate ? new Date(url.expirationDate).toDateString() : '',
       original: url.original,
       short: url.short,
       totalVisit: url.totalVisit,

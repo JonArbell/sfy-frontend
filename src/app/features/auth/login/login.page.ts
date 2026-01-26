@@ -7,10 +7,16 @@ import { toast } from 'ngx-sonner';
 import { form, FormField, minLength, pattern, required } from '@angular/forms/signals';
 import { AuthStore } from '../../../core/stores/auth.store';
 import { HttpErrorResponse } from '@angular/common/http';
+import { FormFieldError } from '../../../shared/types/form-field.errors.type';
 
 interface LoginForm {
   username: string;
   password: string;
+}
+
+interface LoginFormErrors {
+  username: FormFieldError;
+  password: FormFieldError;
 }
 
 @Component({
@@ -48,9 +54,11 @@ export class Login {
     });
   });
 
-  formErrors = signal({
-    username: [],
-    password: [],
+  formErrors = signal<LoginFormErrors>({
+    username: { errors: [] },
+    password: {
+      errors: [],
+    },
   });
 
   constructor(

@@ -7,6 +7,7 @@ import { MyAccount } from '../../core/data-access/my-account/my-account.api';
 import { formatToReadableDate } from '../../shared/utils/format-date.util';
 import { UpdateUserCredentialsRequestDTO } from '../../shared/dtos/request/user-credential-request.dto';
 import { toast } from 'ngx-sonner';
+import { FormFieldError } from '../../shared/types/form-field.errors.type';
 
 interface MyAccountForm {
   username: string;
@@ -18,18 +19,14 @@ interface MyAccountForm {
   confirmPassword: string;
 }
 
-interface ProfileFieldError {
-  errors: string[];
-}
-
 interface ProfileErrors {
-  username: ProfileFieldError;
-  fullName: ProfileFieldError;
-  email: ProfileFieldError;
-  icon: ProfileFieldError;
-  oldPassword: ProfileFieldError;
-  password: ProfileFieldError;
-  confirmPassword: ProfileFieldError;
+  username: FormFieldError;
+  fullName: FormFieldError;
+  email: FormFieldError;
+  icon: FormFieldError;
+  oldPassword: FormFieldError;
+  password: FormFieldError;
+  confirmPassword: FormFieldError;
 }
 
 @Component({

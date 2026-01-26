@@ -19,6 +19,15 @@ import {
   required,
 } from '@angular/forms/signals';
 import { toast } from 'ngx-sonner';
+import { FormFieldError } from '../../../shared/types/form-field.errors.type';
+
+interface RegisterFormErrors {
+  username: FormFieldError;
+  password: FormFieldError;
+  fullName: FormFieldError;
+  email: FormFieldError;
+  confirmPassword: FormFieldError;
+}
 
 @Component({
   selector: 'app-signup',
@@ -37,12 +46,22 @@ export class Signup {
     username: '',
   });
 
-  formErrors = signal({
-    fullName: [],
-    username: [],
-    password: [],
-    confirmPassword: [],
-    email: [],
+  formErrors = signal<RegisterFormErrors>({
+    fullName: {
+      errors: [],
+    },
+    username: {
+      errors: [],
+    },
+    password: {
+      errors: [],
+    },
+    confirmPassword: {
+      errors: [],
+    },
+    email: {
+      errors: [],
+    },
   });
 
   registerForm = form(this.registerModel, (schemaPath) => {
